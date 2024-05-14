@@ -16,7 +16,8 @@ const ConfirmarCuenta = () => {
     },
     onSuccess: data => {
       toast.success(data)
-      navigate("/")
+      localStorage.removeItem("AUTH_TOKEN")
+      navigate("/auth/iniciar-sesion")
     }
   })
 
