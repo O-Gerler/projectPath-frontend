@@ -7,6 +7,7 @@ import { formatearFecha } from "../../helpers";
 import { useQuery } from "@tanstack/react-query";
 import CardColaboradorChat from "../../components/chat/CardColaboradorChat";
 import { obtenerProyecto } from "../../api/proyectoAPI";
+
 const socket = io.connect(import.meta.env.VITE_SERVER_URL);
 
 const ChatProyecto = () => {
@@ -27,12 +28,19 @@ const ChatProyecto = () => {
 
   useEffect(() => {
     socket.emit("join_room", idProyecto);
+    console.log("Join Room")
   }, [idProyecto]);
 
   useEffect(() => {
-    const handleMenssage = (data) =>
-      setListaMensajes((prevLista) => [...prevLista, data]);
+    if(!dataProyecto) return
+    setListaMensajes([])
+  }, [dataProyecto])
+
+  useEffect(() => {
+    const handleMenssage = (data) => {
+      setListaMensajes((prevLista) => [...prevLista, data]);}
     socket.on("receive_message", handleMenssage);
+    console.log("Emit message")
 
     return () => socket.off("receive_message", handleMenssage);
   }, []);
@@ -52,7 +60,7 @@ const ChatProyecto = () => {
     setListaMensajes((prevLista) => [...prevLista, infoMensaje]);
     setMensaje("");
   };
-  
+
   if (isLoading && isLoadingProyecto) return "Cargando...";
   if (isError || isErrorProyecto) return <Navigate to="/404" />;
   if (data && dataProyecto)
