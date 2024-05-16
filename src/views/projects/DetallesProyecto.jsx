@@ -21,6 +21,7 @@ const DetallesProyecto = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["proyecto", idProyecto],
     queryFn: () => obtenerProyecto(idProyecto),
+    refetchInterval: 10000,
     retry: false,
   });
 
@@ -29,7 +30,6 @@ const DetallesProyecto = () => {
     [data, usuarioData]
   );
   
-
   if (isLoading && usuarioIsLoading) return "Cargando...";
   if (isError) return <Navigate to={"/404"} />;
 
